@@ -16,7 +16,7 @@ import sun.misc.BASE64Encoder;
 /**
  * <p>Title: Downimg.java</p>
  *
- * <p>Description: </p>
+ * <p>Description:下载工具 </p>
  *
  * <p>Copyright: Copyright (c) 2017</p>
  *
@@ -77,6 +77,7 @@ public class Downimg extends HttpServlet {
         } catch (Exception e) {
             System.out.println("发送 POST 请求出现异常！" + e);
             e.printStackTrace();
+            return "posterror";
         } finally {
             try {
                 if (out != null) {
@@ -87,6 +88,7 @@ public class Downimg extends HttpServlet {
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
+
             }
         }
         return result;
@@ -133,7 +135,6 @@ public class Downimg extends HttpServlet {
 			}else
 			{
 				System.out.println("文件已经存在");
-				return;
 			}
 
         } catch (MalformedURLException e) {
