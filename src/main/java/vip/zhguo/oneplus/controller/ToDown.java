@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,8 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class ToDown {
+    @Autowired
+    Status status;
     @GetMapping("/")
     public String home(Model model) {
 //        Status status = new Status(2, 10.5);
@@ -50,12 +53,13 @@ public class ToDown {
         Test.begin(cookie);
     }
 
-    @PostMapping("/home")
+    @PostMapping("/down")
     public void down(String cookie, HttpServletRequest res) throws Exception {
+        status.setOverflag(0);
+        status.setDowbUrl("");
+        Querystatus.setstatus(cookie, status);
         System.out.println(cookie);
         String postServer=null;
-        Status status = new Status();
-        Querystatus.setstatus(cookie, status);
         //用于计算百分比，int类型计算
         NumberFormat numberFormat =NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
@@ -65,6 +69,9 @@ public class ToDown {
         Map<String, String> hashmap = new HashMap<String, String>();
         //文件保存路径
         String saveImgPath = res.getServletPath() + "/" + UUID.randomUUID();
+        //ce970714-2607-4e42-9413-26aef45c9e28
+//        String saveImgPath = res.getServletPath() + "/ce970714-2607-4e42-9413-26aef45c9e28";
+
         //获取相册列表
         //cursor=20190822&photoIndex=1
         //lastMatchedMoment   realPhotoIndex
@@ -77,7 +84,7 @@ public class ToDown {
             postServer = Downimg.PostServer(data, urlpath, cookie);
             if("posterror".equals(postServer)){
                 status.setOverflag(2);
-                res.setAttribute("status", status);
+//                res.setAttribute("status", status);
 //                session.setAttribute("status", status);
                 break;
             }
@@ -143,15 +150,10 @@ public class ToDown {
             //判断是否结束
             if (lastMatchedMoment.equals("EOF")) {
                 System.out.println("全部下载完成");
-                status.setDowbUrl("http://baidu.com");
+                status.setOverflag(1);
+                status.setDowbUrl("http://www.baidu.com");
                 break;
             }
-//            if (photosjson == null || photosjson.isEmpty() || "null".equals(photosjson)) {
-//                System.out.println("下载完成");
-//                status.setDowbUrl("http://baidu.com");
-//                return ;
-//
-//            }
         }
 
     }

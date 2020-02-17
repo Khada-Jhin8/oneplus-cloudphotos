@@ -1,5 +1,9 @@
 package vip.zhguo.oneplus.pojo;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+@Component
 public class Status {
     private Integer stage;//第几张
     private Integer total;//总张数

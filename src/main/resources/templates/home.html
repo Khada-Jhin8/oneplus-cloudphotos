@@ -20,6 +20,20 @@
            $("#dwxz").hide();
            var jsqid;
            $("#tijiao").click(function () {
+               $.ajax({
+                   url:'./down',
+                   datype:'json',
+                   type:'POST',
+                   timeout:2000,
+                   async: true,
+                   data:{'cookie':$("#cookie").val()},
+                   success:function (data) {
+                       console.log("请耐心等待");
+                   },
+                   error:function(XMLHttpRequest,textStatus,errorThrown){
+                       console.log("提交失败");
+                   }
+               });
               jsqid= setInterval(function(){
                    $.ajax({
                        url:'./query',//地址
@@ -31,8 +45,11 @@
                        //请求成功
                        success:function(data,status){
                            console.log(data);
+                           $("#stage").text("第"+data.stage+"张/共"+data.total+"张");
+                           $("#current").text(data.current+"%");
+                           $("#current").width(data.current+"%");
                            if(data.overflag==2){
-                               console.log("cookie失效，请更换cookie");
+                               // console.log("cookie失效，请更换cookie");
                                $("#stage").text("cookie失效，请更换cookie");
                                window.clearInterval(jsqid);
                            }
@@ -42,16 +59,14 @@
                                $("#dwxz").show();
                                window.clearInterval(jsqid);
                            }
-                           $("#stage").text("第"+data.stage+"张/共"+data.total+"张");
-                           $("#current").text(data.current+"%");
-                           $("#current").width(data.current+"%");
+
                        },
                        //失败/超时
                        error:function(XMLHttpRequest,textStatus,errorThrown){
                            console.log("失败");
                        }
                    })
-               }, 1000);
+               }, 5000);
            });
 
            $("#beign").click(function () {
@@ -78,11 +93,11 @@
 </head>
 <body>
 <div>
-    <form class="navbar-form navbar-left" role="search" action="/home" method="post" >
+    <form class="navbar-form navbar-left" role="search" >
         <div class="form-group" >
             <input  id="cookie" type="text" class="form-control" placeholder="请输入你的cookie" name="cookie" >
         </div>
-        <button id="tijiao" type="submit" class="btn btn-default">提交</button>
+        <button id="tijiao" type="button" class="btn btn-default">提交</button>
     </form>
 </div>
 <button type="btn" id="beign" class="btn btn-default" >begin</button>
