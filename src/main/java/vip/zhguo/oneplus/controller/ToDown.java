@@ -22,10 +22,12 @@ import sun.misc.BASE64Encoder;
 import vip.zhguo.oneplus.Util.Downimg;
 import vip.zhguo.oneplus.Util.Querystatus;
 import vip.zhguo.oneplus.Util.Test;
+import vip.zhguo.oneplus.Util.Zip;
 import vip.zhguo.oneplus.pojo.Status;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -49,21 +51,25 @@ public class ToDown {
 
     @ResponseBody
     @GetMapping("/test")
-    public void test(String cookie) {
-        Test.begin(cookie);
+    public void test(String cookie,HttpServletRequest res) {
+        System.out.println(res.getServerName());
     }
-
+@GetMapping("/downzip")
+    public void downzip(String path,HttpServletResponse response){
+    Downimg.download(path, response);
+}
     @PostMapping("/down")
     public void down(String cookie, HttpServletRequest res) throws Exception {
         status.setOverflag(0);
-        status.setDowbUrl("");
+        status.setDownUrl("");
+        status.setCurrent(0.0);
         Querystatus.setstatus(cookie, status);
         System.out.println(cookie);
         String postServer=null;
         //用于计算百分比，int类型计算
         NumberFormat numberFormat =NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
-        int sum = 0;
+        int sum = 1;
 //		int count=0;
         ArrayList<String> arr = new ArrayList<String>();
         Map<String, String> hashmap = new HashMap<String, String>();
@@ -71,7 +77,6 @@ public class ToDown {
         String saveImgPath = res.getServletPath() + "/" + UUID.randomUUID();
         //ce970714-2607-4e42-9413-26aef45c9e28
 //        String saveImgPath = res.getServletPath() + "/ce970714-2607-4e42-9413-26aef45c9e28";
-
         //获取相册列表
         //cursor=20190822&photoIndex=1
         //lastMatchedMoment   realPhotoIndex
@@ -83,9 +88,7 @@ public class ToDown {
             //post请求得到json数据
             postServer = Downimg.PostServer(data, urlpath, cookie);
             if("posterror".equals(postServer)){
-                status.setOverflag(2);
-//                res.setAttribute("status", status);
-//                session.setAttribute("status", status);
+                Querystatus.getstatus(cookie).setOverflag(2);
                 break;
             }
             //重置data基础数据
@@ -138,9 +141,8 @@ public class ToDown {
                 //计算百分比保留2位小数
                 String format = numberFormat.format((float) sum / (float) totalCount * 100);
                 double bfb=Double.parseDouble(format);
-                status.setCurrent(bfb);
-//        	count++;
-//        	System.out.println("count......"+count);
+                System.out.println(sum+"......"+totalCount);
+                    status.setCurrent(bfb);
             }
             //        清空map
             map1.clear();
@@ -150,8 +152,11 @@ public class ToDown {
             //判断是否结束
             if (lastMatchedMoment.equals("EOF")) {
                 System.out.println("全部下载完成");
+                String downUrl=saveImgPath+".tar.gz";
                 status.setOverflag(1);
-                status.setDowbUrl("http://www.baidu.com");
+                Zip. compress(saveImgPath,downUrl);
+                status.setOverflag(3);
+                status.setDownUrl(downUrl);
                 break;
             }
         }

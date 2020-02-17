@@ -9,7 +9,15 @@ public class Status {
     private Integer total;//总张数
     private double current;//当前百分比
     private Integer overflag;//结束标志0；未结束，1：结束 2:异常终止
-    private String dowbUrl;//下载链接
+    private String downUrl;//下载链接
+
+    public String getDownUrl() {
+        return downUrl;
+    }
+
+    public void setDownUrl(String downUrl) {
+        this.downUrl = downUrl;
+    }
 
     public Integer getTotal() {
         return total;
@@ -19,13 +27,7 @@ public class Status {
         this.total = total;
     }
 
-    public String getDowbUrl() {
-        return dowbUrl;
-    }
 
-    public void setDowbUrl(String dowbUrl) {
-        this.dowbUrl = dowbUrl;
-    }
 
     public Integer getOverflag() {
         return overflag;

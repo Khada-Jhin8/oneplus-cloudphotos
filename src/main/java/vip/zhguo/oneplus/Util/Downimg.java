@@ -10,6 +10,7 @@ import java.util.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
 
 import sun.misc.BASE64Encoder;
 
@@ -112,36 +113,105 @@ public class Downimg extends HttpServlet {
             DataInputStream dataInputStream = new DataInputStream(url.openStream());
             File filedir = new File(savePath);
             if (!filedir.exists()) {
-				filedir.mkdirs();
+                filedir.mkdirs();
             }
             File file = new File(filedir + "/" + key);
-            if(!file.exists()) {
-				FileOutputStream fileOutputStream = new FileOutputStream(file);
+            if (!file.exists()) {
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
 
-				ByteArrayOutputStream output = new ByteArrayOutputStream();
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-				byte[] buffer = new byte[1024];
-				int length;
+                byte[] buffer = new byte[1024];
+                int length;
 
-				while ((length = dataInputStream.read(buffer)) > 0) {
-					output.write(buffer, 0, length);
-				}
-				BASE64Encoder encoder = new BASE64Encoder();
-				String encode = encoder.encode(buffer);//返回Base64编码过的字节数组字符串
+                while ((length = dataInputStream.read(buffer)) > 0) {
+                    output.write(buffer, 0, length);
+                }
+                BASE64Encoder encoder = new BASE64Encoder();
+                String encode = encoder.encode(buffer);//返回Base64编码过的字节数组字符串
 //	            System.out.println(encode);
-				fileOutputStream.write(output.toByteArray());
-				dataInputStream.close();
-				fileOutputStream.close();
-			}else
-			{
-				System.out.println("文件已经存在");
-			}
+                fileOutputStream.write(output.toByteArray());
+                dataInputStream.close();
+                fileOutputStream.close();
+            } else {
+                System.out.println("文件已经存在");
+            }
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    //下载压缩文件
+    public static String download(String path, HttpServletResponse response) {
+//        try {
+//            // path是指欲下载的文件的路径。
+            File file = new File(path);
+//            // 取得文件名。
+            String filename = file.getName();
+//            // 取得文件的后缀名。
+//            String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
+//
+//            // 以流的形式下载文件。
+//            InputStream fis = new BufferedInputStream(new FileInputStream(path));
+//            byte[] buffer = new byte[fis.available()];
+//            fis.read(buffer);
+//            fis.close();
+//            // 清空response
+//            response.reset();
+//            // 设置response的Header
+//            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
+//            response.addHeader("Content-Length", "" + file.length());
+//            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+//            response.setContentType("application/octet-stream");
+//            toClient.write(buffer);
+//            toClient.flush();
+//            toClient.close();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//        return response;
+        if(file.exists()){ //判断文件父目录是否存在
+            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            // response.setContentType("application/force-download");
+            try {
+                response.setHeader("Content-Disposition", "attachment;fileName=" +   java.net.URLEncoder.encode(filename,"UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = null; //文件输入流
+            BufferedInputStream bis = null;
+
+            OutputStream os = null; //输出流
+            try {
+                os = response.getOutputStream();
+                fis = new FileInputStream(file);
+                bis = new BufferedInputStream(fis);
+                int i = bis.read(buffer);
+                while(i != -1){
+                    os.write(buffer);
+                    i = bis.read(buffer);
+                }
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            System.out.println("----------file download---" + filename);
+            try {
+                bis.close();
+                fis.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return null;
 
     }
 }

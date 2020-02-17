@@ -1,119 +1,123 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
 
-    <script >
-       /* $(function () {
-            $("#test").click(function () {
-                setInterval(function(){ alert("Hello"); }, 1000);
+    <script>
+
+        $(function () {
+            $("#xiazai").attr("disabled", true);
+            var jsqid;
+            $("#tijiao").click(function () {
+                if( $("#cookie").val()==null ||  $("#cookie").val()==''){
+                    alert("cookie不能为空");
+                    return false;
+                }
+                $("#stage").text("请稍后...");
+                $("#current").text( "0%");
+                $("#xiazai").attr("disabled", true);
+                $("#current").width("0%");
+                $.ajax({
+                    url: './down',
+                    datype: 'json',
+                    type: 'POST',
+                    timeout: 2000,
+                    async: true,
+                    data: {'cookie': $("#cookie").val()},
+                    success: function (data) {
+                        console.log("请耐心等待");
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("提交失败");
+                    }
+                });
+                jsqid = setInterval(function () {
+                    $.ajax({
+                        url: './query',//地址
+                        dataType: 'json',//数据类型
+                        type: 'POST',//类型
+                        timeout: 2000,//超时
+                        async: true,
+                        data: {'cookie': $("#cookie").val()},
+                        //请求成功
+                        success: function (data, status) {
+                            console.log(data);
+                            $("#stage").text("第" + data.stage + "张/共" + data.total + "张");
+                            $("#current").text(data.current + "%");
+                            $("#current").width(data.current + "%");
+                            if (data.overflag == 2) {
+                                // console.log("cookie失效，请更换cookie");
+                                $("#stage").text("cookie失效，请更换cookie");
+                                window.clearInterval(jsqid);
+                            }
+                            if (data.overflag == 1) {
+                                // $("#current").text("100%");
+                                // $("#current").width("100%");
+                                $("#stage").text("下载完成，正在打包，请稍后...");
+                            }
+                            if (data.overflag == 3) {
+                                $("#stage").text("打包完成");
+                                $("#path").val(data.downUrl);
+                                $("#xiazai").attr("disabled", false);
+                                window.clearInterval(jsqid);
+                            }
+
+                        },
+                        //失败/超时
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            console.log("失败");
+                        }
+                    })
+                }, 5000);
             });
-       })*/
-       $(function () {
-           $("#dwxz").hide();
-           var jsqid;
-           $("#tijiao").click(function () {
-               $.ajax({
-                   url:'./down',
-                   datype:'json',
-                   type:'POST',
-                   timeout:2000,
-                   async: true,
-                   data:{'cookie':$("#cookie").val()},
-                   success:function (data) {
-                       console.log("请耐心等待");
-                   },
-                   error:function(XMLHttpRequest,textStatus,errorThrown){
-                       console.log("提交失败");
-                   }
-               });
-              jsqid= setInterval(function(){
-                   $.ajax({
-                       url:'./query',//地址
-                       dataType:'json',//数据类型
-                       type:'POST',//类型
-                       timeout:2000,//超时
-                       async:true,
-                       data:{'cookie':$("#cookie").val()},
-                       //请求成功
-                       success:function(data,status){
-                           console.log(data);
-                           $("#stage").text("第"+data.stage+"张/共"+data.total+"张");
-                           $("#current").text(data.current+"%");
-                           $("#current").width(data.current+"%");
-                           if(data.overflag==2){
-                               // console.log("cookie失效，请更换cookie");
-                               $("#stage").text("cookie失效，请更换cookie");
-                               window.clearInterval(jsqid);
-                           }
-                           if(data.overflag==1){
-                               console.log("结束");
-                               $("#down").attr('href',data.dowbUrl);
-                               $("#dwxz").show();
-                               window.clearInterval(jsqid);
-                           }
 
-                       },
-                       //失败/超时
-                       error:function(XMLHttpRequest,textStatus,errorThrown){
-                           console.log("失败");
-                       }
-                   })
-               }, 5000);
-           });
-
-           $("#beign").click(function () {
-                   $.ajax({
-                       url:'./test?cookie='+$("#cookie").val(),//地址
-                       dataType:'json',//数据类型
-                       type:'GET',//类型
-                       timeout:2000,//超时
-                       //请求成功
-                       success:function(data,status){
-                       },
-                       error:function(XMLHttpRequest,textStatus,errorThrown){
-                       }
-                   })
-
-           });
-
-           $("#show").click(function () {
-               $("#dwxz").show();
-           })
-       })
+        })
 
     </script>
 </head>
 <body>
-<div>
-    <form class="navbar-form navbar-left" role="search" >
-        <div class="form-group" >
-            <input  id="cookie" type="text" class="form-control" placeholder="请输入你的cookie" name="cookie" >
+<div style="display: flex;justify-content: center;">
+    <h2>OnePlus云相册批量下载</h2>
+</div>
+<div style="overflow: hidden;overflow: hidden;display: flex;justify-content: center;">
+    <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+            <input id="cookie" type="text" class="form-control" placeholder="请输入你的cookie" name="cookie"
+                   style="width:500px;">
         </div>
         <button id="tijiao" type="button" class="btn btn-default">提交</button>
     </form>
 </div>
-<button type="btn" id="beign" class="btn btn-default" >begin</button>
-<button type="btn" id="test" class="btn btn-default" >test</button>
-<button type="btn" id="show" class="btn btn-default" >show</button>
-
 <!--<div id="stage" th:text="${status!=null}?${status.getOverflag()}">-->
-<div id="stage" th:text="${status!=null && status.getOverflag()==2}?'cookie失效，请更换'">
+<div id="stage"  style="text-align: center;">
+请输入cookie并提交
 </div>
-<div class="progress">
-    <div id="current"  th:text="${status!=null}?${status.getCurrent()}+'%'" th:style="${status!=null}?'width:'+${status.getCurrent()}+'%'" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+<div style="display: flex;justify-content: center;align-items: center;">
+    <div class="progress" style="width: 50%;margin: 0;">
+        <div id="current" th:text="${status!=null}?${status.getCurrent()}+'%'"
+             th:style="${status!=null}?'width:'+${status.getCurrent()}+'%'" class="progress-bar" role="progressbar"
+             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+        </div>
     </div>
-</div>
-<div id="dwxz" >
-    <a id="down" >服务端打包完成，点我下载</a>
 
+    <form class="navbar-form navbar-left" role="search" method="get" action="/downzip">
+        <div>
+            <input id="path" value="" name="path" hidden>
+            <button type="submit" id="xiazai" class="btn btn-default">下载</button>
+        </div>
+    </form>
 </div>
+
 </body>
 </html>
