@@ -28,6 +28,7 @@
                 $("#current").text( "0%");
                 $("#xiazai").attr("disabled", true);
                 $("#current").width("0%");
+                $("#tijiao").attr("disabled", true);
                 $.ajax({
                     url: './down',
                     datype: 'json',
@@ -70,6 +71,7 @@
                                 $("#stage").text("打包完成");
                                 $("#path").val(data.downUrl);
                                 $("#xiazai").attr("disabled", false);
+                                $("#tijiao").attr("disabled", false);
                                 window.clearInterval(jsqid);
                             }
 
