@@ -61,6 +61,7 @@
                                 // console.log("cookie失效，请更换cookie");
                                 $("#stage").text("cookie失效，请更换cookie");
                                 window.clearInterval(jsqid);
+                                $("#tijiao").attr("disabled", false);
                             }
                             if (data.overflag == 1) {
                                 // $("#current").text("100%");
