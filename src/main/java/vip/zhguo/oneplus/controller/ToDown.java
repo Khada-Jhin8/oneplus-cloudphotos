@@ -23,7 +23,6 @@ import sun.misc.BASE64Encoder;
 import vip.zhguo.oneplus.Util.Downimg;
 import vip.zhguo.oneplus.Util.Querystatus;
 import vip.zhguo.oneplus.Util.Test;
-import vip.zhguo.oneplus.Util.Zip;
 import vip.zhguo.oneplus.pojo.Status;
 
 import javax.servlet.http.HttpServlet;
@@ -123,7 +122,6 @@ public class ToDown {
                         data = data + "&cursor=" + lastMatchedMoment + "&photoIndex=" + photoIndex;
                         Querystatus.getstatus(nowcookie).setDataUrl(data);
                     }
-                    /*此处可以添加多线程A*/
                     //拿到photos节点
                     JSONObject photosjson = jobj.getJSONObject("photos");
                     System.out.println(photosjson);
@@ -181,14 +179,9 @@ public class ToDown {
                     map1.clear();
                     hashmap.clear();
                     arr.clear();
-                    /*此处可以添加多线程A*/
                     if (lastMatchedMoment.equals("EOF")) {
                         System.out.println("全部下载完成EOF");
-                        String downUrl = saveImgPath + ".tar.gz";
                         status.setOverflag(1);
-                        Zip.compress(saveImgPath, downUrl);
-                        status.setOverflag(3);
-                        status.setDownUrl(downUrl);
                         return;
                     }
                 }

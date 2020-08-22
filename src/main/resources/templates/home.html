@@ -86,15 +86,12 @@
                             if (data.overflag == 1) {
                                 // $("#current").text("100%");
                                 // $("#current").width("100%");
-                                $("#stage").text("下载完成，正在打包，请稍后...");
-                            }
-                            if (data.overflag == 3) {
-                                $("#stage").text("打包完成");
-                                $("#path").val(data.downUrl);
+                                $("#stage").text("下载完成，请到本地路径D:/down查看");
                                 $("#xiazai").attr("disabled", false);
                                 $("#tijiao").attr("disabled", false);
                                 window.clearInterval(jsqid);
                             }
+
 
                         },
                         //失败/超时
@@ -135,13 +132,7 @@
         </div>
     </div>
 
-    <form class="navbar-form navbar-left" role="search" method="get" action="/downzip">
-        <div>
-            <input id="path" value="" name="path" hidden>
-            <button type="submit" id="xiazai" class="btn btn-default">下载</button>
 
-        </div>
-    </form>
 </div>
 
 </body>
