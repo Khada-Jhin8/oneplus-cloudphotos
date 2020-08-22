@@ -101,8 +101,12 @@ public class Downimg extends HttpServlet {
         String urlpath = "https://cloud.h2os.com/gallery/pc/getRealPhotoUrls";
         String data = "ids=[\"" + Imgid + "\"]";
 //			 System.out.println("imgId"+"====="+data);
-        String realImgPath = PostServer(data, urlpath, cookie);
-        return realImgPath;
+
+            String realImgPath = PostServer(data, urlpath, cookie);
+            return realImgPath;
+
+
+
     }
 
     //链接url下载图片

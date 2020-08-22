@@ -17,6 +17,24 @@
     <script>
 
         $(function () {
+            $("#updatecookie").click(function () {
+                $.ajax({
+                    url: './updatecookie',
+                    datype: 'json',
+                    type: 'POST',
+                    timeout: 2000,
+                    async: true,
+                    data: {'cookie': $("#cookie").val()},
+                    success: function (data) {
+                        alert("更新成功");
+                        $("#updatecookie").attr("disabled", true);
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("提交失败");
+                    }
+                });
+            });
             $("#xiazai").attr("disabled", true);
             var jsqid;
             $("#tijiao").click(function () {
@@ -29,6 +47,7 @@
                 $("#xiazai").attr("disabled", true);
                 $("#current").width("0%");
                 $("#tijiao").attr("disabled", true);
+                $("#updatecookie").attr("disabled", true);
                 $.ajax({
                     url: './down',
                     datype: 'json',
@@ -60,8 +79,9 @@
                             if (data.overflag == 2) {
                                 // console.log("cookie失效，请更换cookie");
                                 $("#stage").text("cookie失效，请更换cookie");
-                                window.clearInterval(jsqid);
-                                $("#tijiao").attr("disabled", false);
+                               // window.clearInterval(jsqid);
+                                $("#updatecookie").attr("disabled", false);
+
                             }
                             if (data.overflag == 1) {
                                 // $("#current").text("100%");
@@ -100,6 +120,7 @@
                    style="width:500px;">
         </div>
         <button id="tijiao" type="button" class="btn btn-default">提交</button>
+        <button type="button" id="updatecookie" class="btn btn-default">更新cookie</button>
     </form>
 </div>
 <!--<div id="stage" th:text="${status!=null}?${status.getOverflag()}">-->
@@ -118,6 +139,7 @@
         <div>
             <input id="path" value="" name="path" hidden>
             <button type="submit" id="xiazai" class="btn btn-default">下载</button>
+
         </div>
     </form>
 </div>

@@ -10,6 +10,15 @@ public class Status {
     private double current;//当前百分比
     private Integer overflag;//结束标志0；未结束，1：结束 2:异常终止
     private String downUrl;//下载链接
+    private String dataUrl; //保存下载的位置
+
+    public String getDataUrl() {
+        return dataUrl;
+    }
+
+    public void setDataUrl(String dataUrl) {
+        this.dataUrl = dataUrl;
+    }
 
     public String getDownUrl() {
         return downUrl;

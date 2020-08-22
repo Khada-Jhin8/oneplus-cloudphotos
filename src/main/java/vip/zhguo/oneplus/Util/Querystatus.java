@@ -17,4 +17,7 @@ public class Querystatus {
     public static void setstatus(String cookie,Status status){
         map.put(cookie, status);
     }
+    public static int getMapsize(){
+        return map.size();
+    }
 }
