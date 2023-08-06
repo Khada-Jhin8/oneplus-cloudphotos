@@ -1,9 +1,12 @@
 package vip.zhguo.oneplus;
 
+import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import vip.zhguo.oneplus.Util.Zip;
+import vip.zhguo.oneplus.Util.HttpClientUtil;
+//import vip.zhguo.oneplus.Util.Zip;
 
 import java.text.NumberFormat;
 
@@ -31,15 +34,6 @@ class OneplusCloudphotosApplicationTests {
     }
 @Test
     void test1(){
-        Integer a = 1;
-        Integer b = 1;
-        Integer c = 500;
-        Integer d = 500;
-        int f=2091;
-        Integer e=2091;
-        System.out.println(a == b);
-        System.out.println(c == d);
-        System.out.println(f == e);
     }
 
 

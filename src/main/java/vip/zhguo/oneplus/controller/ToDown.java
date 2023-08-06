@@ -1,34 +1,22 @@
 package vip.zhguo.oneplus.controller;
-import java.io.*;
-import java.io.ObjectInputStream.GetField;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import sun.misc.BASE64Encoder;
 import vip.zhguo.oneplus.Util.Downimg;
+import vip.zhguo.oneplus.Util.NewDowning;
 import vip.zhguo.oneplus.Util.Querystatus;
-import vip.zhguo.oneplus.Util.Test;
 import vip.zhguo.oneplus.pojo.Status;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class ToDown {
@@ -61,15 +49,15 @@ public class ToDown {
         Querystatus.setstatus(nowcookie,temp);
         return "success";
     }
-    @ResponseBody
-    @GetMapping("/test")
-    public void test(String cookie,HttpServletRequest res) {
-        System.out.println(res.getServerName());
-    }
-@GetMapping("/downzip")
-    public void downzip(String path,HttpServletResponse response){
-    Downimg.download(path, response);
-}
+//    @ResponseBody
+//    @GetMapping("/test")
+//    public void test(String cookie,HttpServletRequest res) {
+//        System.out.println(res.getServerName());
+//    }
+//@GetMapping("/downzip")
+//    public void downzip(String path,HttpServletResponse response){
+//    Downimg.download(path, response);
+//}
     @PostMapping("/down")
     public void down(String cookie, HttpServletRequest res) throws Exception {
         this.nowcookie=cookie;
@@ -101,9 +89,9 @@ public class ToDown {
                 while (true) {
                     //post请求得到json数据
                     if (sum==1) { //sum==1 说明第一次提交
-                        postServer = Downimg.PostServer(data, urlpath, nowcookie);
+                        postServer = NewDowning.postServer(data, urlpath, nowcookie);
                     }else{
-                        postServer = Downimg.PostServer( Querystatus.getstatus(nowcookie).getDataUrl(), urlpath, nowcookie);
+                        postServer = NewDowning.postServer( Querystatus.getstatus(nowcookie).getDataUrl(), urlpath, nowcookie);
                     }
                     if ("posterror".equals(postServer)) {
                         Querystatus.getstatus(nowcookie).setOverflag(2);
@@ -149,8 +137,11 @@ public class ToDown {
                         }
 
                     }
+                    System.out.println("hashmap>>>>>>"+hashmap.toString());
                     for (String key : hashmap.keySet()) {
-                        String realPathJson = Downimg.getRealPath(hashmap.get(key), nowcookie);
+//                        Thread.sleep(6000);
+                        String realPathJson = NewDowning.getRealPath(hashmap.get(key), nowcookie);
+                        System.out.println("realPathJson>>>>>>"+realPathJson.toString());
                         JSONObject j = JSONObject.parseObject(realPathJson);
                         String realPath = j.getString(hashmap.get(key));
                         Downimg.downloadPicture(realPath, saveImgPath, key);

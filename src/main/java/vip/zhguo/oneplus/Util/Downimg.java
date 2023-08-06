@@ -50,7 +50,7 @@ public class Downimg extends HttpServlet {
             /**设置URLConnection的参数和普通的请求属性****start***/
             conn.setRequestProperty("accept", "*/*");
             conn.setRequestProperty("connection", "Keep-Alive");
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
             conn.setRequestProperty("Host", "cloud.h2os.com");
             conn.setRequestProperty("referer", "https://cloud.h2os.com/");
 
@@ -100,7 +100,7 @@ public class Downimg extends HttpServlet {
     public static String getRealPath(String Imgid, String cookie) {
         String urlpath = "https://cloud.h2os.com/gallery/pc/getRealPhotoUrls";
         String data = "ids=[\"" + Imgid + "\"]";
-//			 System.out.println("imgId"+"====="+data);
+			 System.out.println("imgId"+"====="+data);
 
             String realImgPath = PostServer(data, urlpath, cookie);
             return realImgPath;
@@ -156,28 +156,6 @@ public class Downimg extends HttpServlet {
             File file = new File(path);
 //            // 取得文件名。
             String filename = file.getName();
-//            // 取得文件的后缀名。
-//            String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
-//
-//            // 以流的形式下载文件。
-//            InputStream fis = new BufferedInputStream(new FileInputStream(path));
-//            byte[] buffer = new byte[fis.available()];
-//            fis.read(buffer);
-//            fis.close();
-//            // 清空response
-//            response.reset();
-//            // 设置response的Header
-//            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
-//            response.addHeader("Content-Length", "" + file.length());
-//            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-//            response.setContentType("application/octet-stream");
-//            toClient.write(buffer);
-//            toClient.flush();
-//            toClient.close();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
-//        return response;
         if(file.exists()){ //判断文件父目录是否存在
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");
             response.setCharacterEncoding("UTF-8");
