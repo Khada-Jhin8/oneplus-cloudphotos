@@ -60,6 +60,7 @@ public class ToDown {
 //}
     @PostMapping("/down")
     public void down(String cookie, HttpServletRequest res) throws Exception {
+        Map<String,String> realPathMap = new HashMap();
         this.nowcookie=cookie;
         status.setOverflag(0);
         status.setDownUrl("");
@@ -139,12 +140,13 @@ public class ToDown {
                     }
                     System.out.println("hashmap>>>>>>"+hashmap.toString());
                     for (String key : hashmap.keySet()) {
-//                        Thread.sleep(6000);
                         String realPathJson = NewDowning.getRealPath(hashmap.get(key), nowcookie);
                         System.out.println("realPathJson>>>>>>"+realPathJson.toString());
                         JSONObject j = JSONObject.parseObject(realPathJson);
                         String realPath = j.getString(hashmap.get(key));
-                        Downimg.downloadPicture(realPath, saveImgPath, key);
+                        realPathMap.put(key,realPath);
+//                        下载
+//                        Downimg.downloadPicture(realPath, saveImgPath, key);
                         sum++;
                         status.setStage(sum);
                         //计算百分比保留2位小数
@@ -172,6 +174,7 @@ public class ToDown {
                     arr.clear();
                     if (lastMatchedMoment.equals("EOF")) {
                         System.out.println("全部下载完成EOF");
+                        System.out.println(realPathMap.toString());
                         status.setOverflag(1);
                         return;
                     }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
@@ -210,18 +211,19 @@ public class HttpClientUtil {
 //        log.info("cookie_>>>>>>>>>>>>>" + cookie_.toString());
 //        HttpClientContext httpClientContext = HttpClientContext.create();
 //        httpClientContext.setCookieStore(basicCookieStore);
+//        httpClient = HttpClients.custom().setProxy(new HttpHost("183.164.242.16",8089)).build();
+//        httpClient = HttpClients.custom().build();
         HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("accept", "*/*");
-        httpPost.setHeader("cookie", cookie);
-        httpPost.setHeader("connection", "Keep-Alive");
+        httpPost.setHeader("Accept", "*/*");
+        httpPost.setHeader("Cookie", cookie);
+        httpPost.setHeader("Connection", "Keep-Alive");
         httpPost.setHeader("Host", "cloud.h2os.com");
-        httpPost.setHeader("Host", "cloud.h2os.com");
-        httpPost.setHeader("referer", "https://cloud.h2os.com/");
+        httpPost.setHeader("Origin", "cloud.h2os.com");
+        httpPost.setHeader("Referer", "https://cloud.h2os.com/");
         httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
         try {
 
             httpPost.setEntity(new StringEntity(data.toString(), Consts.UTF_8));
-
             HttpResponse response = httpClient.execute(httpPost);
 
             logger.info("POST request  url:{} response:{}  time:{}",
