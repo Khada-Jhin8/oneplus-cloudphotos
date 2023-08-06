@@ -214,13 +214,16 @@ public class HttpClientUtil {
 //        httpClient = HttpClients.custom().setProxy(new HttpHost("183.164.242.16",8089)).build();
 //        httpClient = HttpClients.custom().build();
         HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("Accept", "*/*");
-        httpPost.setHeader("Cookie", cookie);
-        httpPost.setHeader("Connection", "Keep-Alive");
-        httpPost.setHeader("Host", "cloud.h2os.com");
-        httpPost.setHeader("Origin", "cloud.h2os.com");
-        httpPost.setHeader("Referer", "https://cloud.h2os.com/");
-        httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
+        httpPost.setHeader("accept", "*/*");
+        httpPost.setHeader("Accept-Encoding", "gzip, deflate, br");
+        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.setHeader("cookie", cookie);
+        httpPost.setHeader("connection", "Keep-Alive");
+        httpPost.setHeader("host", "cloud.h2os.com");
+        httpPost.setHeader("origin", "cloud.h2os.com");
+        httpPost.setHeader("referer", "https://cloud.h2os.com/");
+        httpPost.setHeader("X-Requested-With", "XMLHttpRequest");
+        httpPost.setHeader("user-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.50");
         try {
 
             httpPost.setEntity(new StringEntity(data.toString(), Consts.UTF_8));
